@@ -1,9 +1,53 @@
 var express = require('express');
 var router = express.Router();
 
+const ID_KEY = 'SBAyE5SPkE1Fj10z9mIu';
+const SECRET_KEY = 'FqL3cXfOxX';
+
+
+const imageSet = async(name) => {
+  // const word = req.query.query;
+  const search = name
+  const data = await fetch(`https://openapi.naver.com/v1/search/movie.json?query=${search}`, {
+    headers: {
+      'X-Naver-Client-Id': ID_KEY,
+      'X-Naver-Client-Secret': SECRET_KEY,
+      'Access-Control-Allow-Origin': '*'
+    }
+  })
+  let dates = await data.json()
+  let dateZero = await dates.items[0]
+  result = await dateZero["image"]
+  return result
+}
+
+
+
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.send("express");
+router.get('/filter/:data', async function(req, res, next) {
+  const {data}= req.params
+  const jinsungData = await fetch(`http://3.38.246.123/filter/${data}`)
+  let datas = await jinsungData.json()
+  let new_data = await JSON.parse(datas)
+
+  let new_data2 = await new_data["data"]
+  
+  const result = []
+  for (let i = 0; i < new_data2.length; i++) {
+      let data = new_data2[i]["title"]
+      result.push(data)
+      }
+
+  const returns = []
+  for (let i = 0; i < result.length; i++) {
+      let data = await imageSet(result[i])
+      returns.push(data)
+      }
+
+  const result_real = {data : returns }
+
+  res.send(result_real)
+  
 });
 
 module.exports = router;
