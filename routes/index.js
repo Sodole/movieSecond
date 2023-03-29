@@ -27,7 +27,7 @@ const imageSet = async(name) => {
 router.get('/filter/:data', async function(req, res, next) {
   const {data}= req.params
   try{
-   const jinsungData = await fetch(`https://port-0-movie-sim-recommandation-6g2llfhupy60.sel3.cloudtype.app/${data}`)
+   const jinsungData = await fetch(`https://port-0-movie-sim-recommandation-6g2llfhupy60.sel3.cloudtype.app/filter/${data}`)
    let datas = await jinsungData.json()
    let new_data = await JSON.parse(datas)
  
